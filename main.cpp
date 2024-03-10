@@ -52,6 +52,8 @@ int main() {
     rightPaddle.height = 100;
     rightPaddle.speed = 500;
 
+    const char* winText = nullptr;
+
     while (!WindowShouldClose()) {
 
         ball.x += ball.speedx *GetFrameTime();
@@ -90,6 +92,20 @@ int main() {
             }
         }
 
+        if (ball.x < 0) {
+            winText = "Right win!";
+        }
+        if (ball.x > GetScreenWidth()) {
+            winText = "Left win!";
+        }
+        if (winText && IsKeyPressed(KEY_SPACE)) {
+            ball.x = GetScreenWidth() / 2;
+            ball.y = GetScreenHeight() / 2;
+            ball.speedx = 300;
+            ball.speedy = 300;
+            winText = nullptr;
+        }
+
         BeginDrawing();
         ClearBackground(BLACK);
 
@@ -97,7 +113,10 @@ int main() {
         leftPaddle.Draw();
         rightPaddle.Draw();
 
-        DrawFPS(10, 10);
+        if (winText) {
+            DrawText(winText, 250, GetScreenHeight() / 2 - 30, 60, WHITE);
+        }
+
         EndDrawing();
     }
 
